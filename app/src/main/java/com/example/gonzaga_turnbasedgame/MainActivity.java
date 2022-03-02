@@ -111,6 +111,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         skillEnabled();
     }
 
+    //resets the game
+    public void resetGame(){
+        turn = 0;
+        playerHP = 100;
+        enemyHP = 100;
+        playerThreat = 0;
+        enemyThreat = 0;
+        txtFight.setText("FIGHT!!!");
+        txtLog.setText("Choose an action...");
+        txtContinue.setText("");
+        txtPlayerHP.setText("Player HP:" + playerHP);
+        txtEnemyHP.setText("Enemy HP:" + enemyHP);
+    }
+
     @Override
     public void onClick(View v){
 
@@ -216,32 +230,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
 
                 if (enemyHP <= 0 && turn % 2 == 1) {
-                    turn = 0;
-                    playerHP = 100;
-                    enemyHP = 100;
-                    playerThreat = 0;
-                    enemyThreat = 0;
-                    txtFight.setText("FIGHT!!!");
-                    txtLog.setText("Choose an action...");
-                    txtContinue.setText("");
-                    txtPlayerHP.setText("Player HP:" + playerHP);
-                    txtEnemyHP.setText("Enemy HP:" + enemyHP);
+                    resetGame();
                     skillEnabled();
                 }
 
                 if (playerHP <= 0 && enemyWin == true){
-                    turn = 0;
-                    playerHP = 100;
-                    enemyHP = 100;
-                    playerThreat = 0;
-                    enemyThreat = 0;
+                    resetGame();
                     enemyWin = false;
-                    txtFight.setText("FIGHT!!!");
-                    txtLog.setText("Choose an action...");
-                    txtContinue.setText("");
-                    txtPlayerHP.setText("Player HP:" + playerHP);
-                    txtEnemyHP.setText("Enemy HP:" + enemyHP);
-                    txtContinue.setText("");
                     playerTurnEnabled();
                 }
 
