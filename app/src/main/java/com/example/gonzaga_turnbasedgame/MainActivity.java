@@ -14,6 +14,7 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
+    //initializing variables
     TextView txtLog, txtPlayerHP, txtEnemyHP, txtFight, txtContinue;
     Button btnAttack, btnIntimidate, btnHeal, btnFlee;
     ImageView imgPlayer, imgEnemy, imgLog;
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setContentView(R.layout.activity_main);
 
-        //initialize
+        //set ID's
         txtLog = findViewById(R.id.txtLog);
         txtPlayerHP = findViewById(R.id.txtPlayerHP);
         txtEnemyHP = findViewById(R.id.txtEnemyHP);
@@ -63,60 +64,69 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         imgLog.setClickable(false);
     }
 
+    //adding methods here
+
+    //method for enabling 'intimidate' and 'heal'
+    public void skillEnabled(){
+        //condition for Intimidate
+        if (turn > 6 && turn % 2 == 1){
+            btnIntimidate.setEnabled(true);
+            btnIntimidate.setClickable(true);
+        } else {
+            btnIntimidate.setEnabled(false);
+            btnIntimidate.setClickable(false);
+        }
+        //condition for Heal
+        if (turn > 8 && turn % 2 == 1) {
+            btnHeal.setEnabled(true);
+            btnHeal.setClickable(true);
+        } else {
+            btnHeal.setEnabled(false);
+            btnHeal.setClickable(false);
+        }
+    }
+
+    //disables player activity
+    public void playerTurnDisabled(){
+        btnAttack.setEnabled(false);
+        btnAttack.setClickable(false);
+        btnIntimidate.setEnabled(false);
+        btnIntimidate.setClickable(false);
+        btnHeal.setEnabled(false);
+        btnHeal.setClickable(false);
+        btnFlee.setEnabled(false);
+        btnFlee.setClickable(false);
+        imgLog.setEnabled(true);
+        imgLog.setClickable(true);
+    }
+
+    //enables player activity
+    public void playerTurnEnabled(){
+        imgLog.setEnabled(false);
+        imgLog.setClickable(false);
+        btnAttack.setEnabled(true);
+        btnAttack.setClickable(true);
+        btnFlee.setEnabled(true);
+        btnFlee.setClickable(true);
+        skillEnabled();
+    }
+
     @Override
     public void onClick(View v){
 
-        //random selection for attack
+        //random selection for player and enemy attack
         Random randomizer = new Random();
         int attack = randomizer.nextInt(100);
 
         //player turn condition
         if (turn % 2 == 1) {
-
-            imgLog.setEnabled(false);
-            imgLog.setClickable(false);
-
-            btnAttack.setEnabled(true);
-            btnAttack.setClickable(true);
-            btnFlee.setEnabled(true);
-            btnFlee.setClickable(true);
-
+            playerTurnEnabled();
             txtContinue.setText("");
-
-            //condition for Intimidate
-            if (turn > 6 && turn % 2 == 1){
-                btnIntimidate.setEnabled(true);
-                btnIntimidate.setClickable(true);
-            } else {
-                btnIntimidate.setEnabled(false);
-                btnIntimidate.setClickable(false);
-            }
-
-            //condition for Heal
-            if (turn > 8 && turn % 2 == 1) {
-                btnHeal.setEnabled(true);
-                btnHeal.setClickable(true);
-            } else {
-                btnHeal.setEnabled(false);
-                btnHeal.setClickable(false);
-            }
         }
 
         //enemy turn condition
         if (turn % 2 == 0) {
-
-            btnAttack.setEnabled(false);
-            btnAttack.setClickable(false);
-            btnIntimidate.setEnabled(false);
-            btnIntimidate.setClickable(false);
-            btnHeal.setEnabled(false);
-            btnHeal.setClickable(false);
-            btnFlee.setEnabled(false);
-            btnFlee.setClickable(false);
-
-            imgLog.setEnabled(true);
-            imgLog.setClickable(true);
-
+            playerTurnDisabled();
             txtContinue.setText("Click log to continue...");
         }
 
@@ -125,7 +135,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             //player actions here
             case R.id.btnAttack:
-
                 if (attack >= 81) {
                     playerDamage = 18;
                     playerDamage += playerThreat;
@@ -151,7 +160,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.btnIntimidate:
-
                 playerThreat += 3;
                 txtLog.setText("You've intimidated the enemy!\n" +
                         "+" + playerThreat + " damage on next attack");
@@ -159,7 +167,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.btnHeal:
-
                 txtLog.setText("You are given bubod. You gained 10 HP!");
                 playerHP += 10;
                 turn -= 3;
@@ -167,19 +174,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.btnFlee:
-
                 playerHP = 0;
                 txtLog.setText("You've fled. The enemy wins...");
                 txtFight.setText("YOU LOSE!!!");
                 txtPlayerHP.setText("Player HP: " + playerHP);
-                btnAttack.setEnabled(false);
-                btnAttack.setClickable(false);
-                btnIntimidate.setEnabled(false);
-                btnIntimidate.setClickable(false);
-                btnHeal.setEnabled(false);
-                btnHeal.setClickable(false);
-                btnFlee.setEnabled(false);
-                btnFlee.setClickable(false);
+                playerTurnDisabled();
                 break;
 
             //img log is for enemy turn and
@@ -227,24 +226,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     txtContinue.setText("");
                     txtPlayerHP.setText("Player HP:" + playerHP);
                     txtEnemyHP.setText("Enemy HP:" + enemyHP);
-
-                    //condition for Intimidate
-                    if (turn > 6 && turn % 2 == 1) {
-                        btnIntimidate.setEnabled(true);
-                        btnIntimidate.setClickable(true);
-                    } else {
-                        btnIntimidate.setEnabled(false);
-                        btnIntimidate.setClickable(false);
-                    }
-
-                    //condition for Heal
-                    if (turn > 8 && turn % 2 == 1) {
-                        btnHeal.setEnabled(true);
-                        btnHeal.setClickable(true);
-                    } else {
-                        btnHeal.setEnabled(false);
-                        btnHeal.setClickable(false);
-                    }
+                    skillEnabled();
                 }
 
                 if (playerHP <= 0 && enemyWin == true){
@@ -259,36 +241,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     txtContinue.setText("");
                     txtPlayerHP.setText("Player HP:" + playerHP);
                     txtEnemyHP.setText("Enemy HP:" + enemyHP);
-
-                    imgLog.setEnabled(false);
-                    imgLog.setClickable(false);
-                    btnAttack.setEnabled(true);
-                    btnAttack.setClickable(true);
-                    btnFlee.setEnabled(true);
-                    btnFlee.setClickable(true);
                     txtContinue.setText("");
-
-                    //condition for Intimidate
-                    if (turn > 6 && turn % 2 == 1){
-                        btnIntimidate.setEnabled(true);
-                        btnIntimidate.setClickable(true);
-                    } else {
-                        btnIntimidate.setEnabled(false);
-                        btnIntimidate.setClickable(false);
-                    }
-
-                    //condition for Heal
-                    if (turn > 8 && turn == 101) {
-                        btnHeal.setEnabled(true);
-                        btnHeal.setClickable(true);
-                    } else {
-                        btnHeal.setEnabled(false);
-                        btnHeal.setClickable(false);
-                    }
+                    playerTurnEnabled();
                 }
 
                 if (playerHP <= 0) {
-
                     //shows "YOU LOSE" and enables game restart if playerHP < 0
                     enemyWin = true;
                     imgLog.setEnabled(true);
@@ -299,40 +256,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //winning condition
         if (enemyHP <= 0) {
-
-            txtLog.setText("You've defeated the enemy...");
+            txtLog.setText("You've defeated the enemy!");
             txtFight.setText("YOU WIN!!!");
             txtEnemyHP.setText("Enemy HP: 0");
             txtContinue.setText("Click log to continue...");
-            btnAttack.setEnabled(false);
-            btnAttack.setClickable(false);
-            btnIntimidate.setEnabled(false);
-            btnIntimidate.setClickable(false);
-            btnHeal.setEnabled(false);
-            btnHeal.setClickable(false);
-            btnFlee.setEnabled(false);
-            btnFlee.setClickable(false);
-            imgLog.setEnabled(true);
-            imgLog.setClickable(true);
+            playerTurnDisabled();
         }
 
         //losing condition
         if (playerHP <= 0) {
-
             txtLog.setText("You've been beaten by the enemy...");
             txtFight.setText("YOU LOSE!!!");
             txtPlayerHP.setText("Player HP: 0");
             txtContinue.setText("Click log to continue...");
-            btnAttack.setEnabled(false);
-            btnAttack.setClickable(false);
-            btnIntimidate.setEnabled(false);
-            btnIntimidate.setClickable(false);
-            btnHeal.setEnabled(false);
-            btnHeal.setClickable(false);
-            btnFlee.setEnabled(false);
-            btnFlee.setClickable(false);
-            imgLog.setEnabled(true);
-            imgLog.setClickable(true);
+            playerTurnDisabled();
         }
     }
 }
